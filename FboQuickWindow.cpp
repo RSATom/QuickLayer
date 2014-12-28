@@ -37,6 +37,22 @@ FboQuickWindow::FboQuickWindow( QOpenGLContext* context /*= 0*/ )
 
 FboQuickWindow::~FboQuickWindow()
 {
+    disconnect( this, &QQuickWindow::sceneGraphInitialized,
+                this, &FboQuickWindow::sceneGraphInitialized );
+    disconnect( this, &QQuickWindow::sceneGraphInvalidated,
+                this, &FboQuickWindow::sceneGraphInitialized );
+
+    disconnect( &m_renderControl, &QQuickRenderControl::renderRequested,
+                this, &FboQuickWindow::renderRequested );
+    disconnect( &m_renderControl, &QQuickRenderControl::sceneChanged,
+                this, &FboQuickWindow::sceneChanged );
+
+    if( m_context && m_offscreenSurface &&
+        m_context->makeCurrent( m_offscreenSurface ) )
+    {
+        m_renderControl.invalidate();
+    }
+
     destroyFbo();
 
     delete m_offscreenSurface;
