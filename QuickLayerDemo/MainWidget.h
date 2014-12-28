@@ -2,6 +2,8 @@
 
 #include <QWidget>
 
+#include "../FboQuickView.h"
+
 class MainWidget : public QWidget
 {
     Q_OBJECT
@@ -9,4 +11,7 @@ class MainWidget : public QWidget
 public:
     MainWidget();
     ~MainWidget();
+
+private:
+    FboQuickView m_fboQuickView;
 };
