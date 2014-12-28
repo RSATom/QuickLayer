@@ -21,4 +21,5 @@
 @interface QuickLayer : NSOpenGLLayer
 {
 }
+- (id) initWithFboQuickWindow: (FboQuickWindow*) quickWindow;
 @end

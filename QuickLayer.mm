@@ -16,20 +16,28 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
  *****************************************************************************/
 
+#include "FboQuickView.h"
+
+#include <QOpenGLContext>
+#include <QtPlatformHeaders/QCocoaNativeContext>
+#include <QOpenGLFramebufferObject>
+
 #include "QuickLayer.h"
 
 #include <OpenGL/gl.h>
 
 @implementation QuickLayer
 
+FboQuickWindow* _quickWindow;
 GLuint _program;
 
-- (id) init
+- (id) initWithFboQuickWindow: (FboQuickWindow*) quickWindow
 {
     self = [super init];
 
     if( self != nil ) {
         _program = 0;
+        _quickWindow = quickWindow;
     }
 
     return self;
@@ -89,6 +97,12 @@ GLuint _program;
 
     [NSOpenGLContext clearCurrentContext];
 
+    QOpenGLContext* layerContext = new QOpenGLContext;
+    layerContext->setNativeHandle( QVariant::fromValue( QCocoaNativeContext( context ) ) );
+    layerContext->create();
+
+    _quickWindow->init( layerContext );
+
     return context;
 }
 
@@ -97,38 +111,42 @@ GLuint _program;
                forLayerTime: (CFTimeInterval) __unused timeInterval
                 displayTime: (const CVTimeStamp*) __unused timeStamp
 {
-    glUseProgram( _program );
+    if( QOpenGLFramebufferObject* fbo = _quickWindow->fbo() ) {
+        glBindTexture( GL_TEXTURE_2D, fbo->texture() );
 
-    //FIXME! replace with vbo
-    GLfloat v[] = {
-        -1. ,  1. ,  0. ,
-         1. , -1. ,  0. ,
-        -1. , -1. ,  0. ,
+        glUseProgram( _program );
 
-         1. , -1. ,  0. ,
-        -1. ,  1. ,  0. ,
-         1. ,  1. ,  0. ,
-    };
+        //FIXME! replace with vbo
+        GLfloat v[] = {
+            -1. ,  1. ,  0. ,
+             1. , -1. ,  0. ,
+            -1. , -1. ,  0. ,
 
-    GLfloat t[] = {
-        0., 1.,
-        1., 0.,
-        0., 0.,
+             1. , -1. ,  0. ,
+            -1. ,  1. ,  0. ,
+             1. ,  1. ,  0. ,
+        };
 
-        1., 0.,
-        0., 1.,
-        1., 1.,
-    };
+        GLfloat t[] = {
+            0., 1.,
+            1., 0.,
+            0., 0.,
 
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, v );
-    glEnableVertexAttribArray( 0 );
+            1., 0.,
+            0., 1.,
+            1., 1.,
+        };
 
-    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, t );
-    glEnableVertexAttribArray( 1 );
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, v );
+        glEnableVertexAttribArray( 0 );
 
-    glDrawArrays ( GL_TRIANGLES, 0, 6 );
+        glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, t );
+        glEnableVertexAttribArray( 1 );
 
-    glUseProgram( 0 );
+        glDrawArrays ( GL_TRIANGLES, 0, 6 );
+
+        glUseProgram( 0 );
+    }
 }
 
 @end
