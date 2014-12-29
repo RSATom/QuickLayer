@@ -18,6 +18,8 @@
 
 #import <AppKit/AppKit.h>
 
+class FboQuickWindow; //#include "FboQuickWindow.h"
+
 @interface QuickLayer : NSOpenGLLayer
 {
 }
