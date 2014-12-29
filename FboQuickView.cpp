@@ -25,7 +25,7 @@ void FboQuickView::setSource( const QUrl& source )
     }
 
     if( !source.isEmpty() ) {
-        m_qmlComponent = new QQmlComponent( &m_qmlEngine, source );
+        m_qmlComponent = new QQmlComponent( &m_qmlEngine, source, &m_qmlEngine );
         if( m_qmlComponent->isLoading() ) {
             connect( m_qmlComponent, &QQmlComponent::statusChanged,
                      this, &FboQuickView::componentStatusChanged );
@@ -51,9 +51,8 @@ void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
     if( !m_rootItem )
         return;
 
+    rootObject.take()->setParent( contentItem() );
     m_rootItem->setParentItem( contentItem() );
-
-    rootObject.take();
 }
 
 void FboQuickView::resizeEvent( QResizeEvent* event )
