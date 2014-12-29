@@ -14,14 +14,14 @@ struct RenderControlHolder
 class FboQuickWindow : private RenderControlHolder, public QQuickWindow
 {
 public:
-    //takes opnership over passed QOpenGLContext
+    //takes ownership over passed QOpenGLContext
     FboQuickWindow( QOpenGLContext* = 0 );
     ~FboQuickWindow();
 
     QOpenGLFramebufferObject* fbo() const
         { return m_fbo; }
 
-    //takes opnership over passed QOpenGLContext
+    //takes ownership over passed QOpenGLContext
     void init( QOpenGLContext* );
 
 protected:
