@@ -12,6 +12,11 @@ FboQuickView::~FboQuickView()
 {
 }
 
+QQmlContext* FboQuickView::rootContext() const
+{
+    return m_qmlEngine.rootContext();
+}
+
 void FboQuickView::setSource( const QUrl& source )
 {
     if( m_rootItem ) {

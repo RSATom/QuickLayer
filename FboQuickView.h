@@ -12,6 +12,8 @@ public:
     FboQuickView( QOpenGLContext* = 0 );
     ~FboQuickView();
 
+    QQmlContext* rootContext() const;
+
 public Q_SLOTS:
     void setSource( const QUrl& );
 
