@@ -79,10 +79,13 @@ void FboQuickWindow::createFbo()
 {
     Q_ASSERT( !m_fbo );
 
-    m_fbo =
-        new QOpenGLFramebufferObject( size(),
-                                      QOpenGLFramebufferObject::CombinedDepthStencil );
-    setRenderTarget( m_fbo );
+    QSize size = this->size();
+    if( m_context && size.width() && size.height() ) {
+        m_fbo =
+            new QOpenGLFramebufferObject( size,
+                                          QOpenGLFramebufferObject::CombinedDepthStencil );
+        setRenderTarget( m_fbo );
+    }
 }
 
 void FboQuickWindow::destroyFbo()
