@@ -150,3 +150,16 @@ void FboQuickWindow::resizeEvent( QResizeEvent* )
         m_context->doneCurrent();
     }
 }
+
+void FboQuickWindow::resize( const QSize& newSize )
+{
+    //have to emulate resize event since Qt don't generate some events on hidden window
+    QResizeEvent event( size(), newSize );
+    QQuickWindow::resize( newSize );
+    resizeEvent( &event );
+}
+
+void FboQuickWindow::resize( int w, int h )
+{
+    resize( QSize( w, h ) );
+}

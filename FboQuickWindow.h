@@ -24,6 +24,12 @@ public:
     //takes ownership over passed QOpenGLContext
     void init( QOpenGLContext* );
 
+    void resize( const QSize& newSize );
+    void resize( int w, int h );
+
+private:
+    using QQuickWindow::resize; //it shouldn't be used directly
+
 protected:
     void resizeEvent( QResizeEvent* );
 
