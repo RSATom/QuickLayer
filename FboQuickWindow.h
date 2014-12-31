@@ -41,7 +41,6 @@ private Q_SLOTS:
     void sceneChanged();
 
     void render();
-    void fullRender();
 
 private:
     void createFbo();
@@ -51,6 +50,7 @@ private:
     QOpenGLContext* m_context;
     QOffscreenSurface* m_offscreenSurface;
     QOpenGLFramebufferObject* m_fbo;
-    QTimer m_fullRenderTimer;
+
+    bool m_needPolishAndSync;
     QTimer m_renderTimer;
 };
