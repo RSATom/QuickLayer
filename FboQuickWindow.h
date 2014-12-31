@@ -24,6 +24,9 @@ public:
     //takes ownership over passed QOpenGLContext
     void init( QOpenGLContext* );
 
+    void scheduleResize( const QSize& newSize );
+    void scheduleResize( int w, int h );
+
     void resize( const QSize& newSize );
     void resize( int w, int h );
 
@@ -40,6 +43,8 @@ private Q_SLOTS:
     void renderRequested();
     void sceneChanged();
 
+    void doScheduledResize();
+
     void render();
 
 private:
@@ -50,6 +55,9 @@ private:
     QOpenGLContext* m_context;
     QOffscreenSurface* m_offscreenSurface;
     QOpenGLFramebufferObject* m_fbo;
+
+    QTimer m_resizeTimer;
+    QSize m_requestedSize;
 
     bool m_needPolishAndSync;
     QTimer m_renderTimer;

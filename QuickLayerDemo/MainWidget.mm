@@ -6,8 +6,6 @@ MainWidget::MainWidget()
 {
     NSView* nsView = reinterpret_cast<NSView*>( this->winId() );
 
-    m_fboQuickView.resize(size());
-
     QuickLayer* nsOglLayer =
         [[QuickLayer alloc] initWithFboQuickWindow: &m_fboQuickView];
     [nsOglLayer setAsynchronous:YES];

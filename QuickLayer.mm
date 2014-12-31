@@ -101,6 +101,7 @@ GLuint _program;
     layerContext->setNativeHandle( QVariant::fromValue( QCocoaNativeContext( context ) ) );
     layerContext->create();
 
+    _quickWindow->resize( self.frame.size.width, self.frame.size.height );
     _quickWindow->init( layerContext );
 
     return context;
@@ -147,6 +148,13 @@ GLuint _program;
 
         glUseProgram( 0 );
     }
+}
+
+- (void)resizeWithOldSuperlayerSize: (CGSize) size
+{
+    _quickWindow->scheduleResize( size.width, size.height );
+
+    [super resizeWithOldSuperlayerSize: size];
 }
 
 @end

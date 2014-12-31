@@ -22,6 +22,10 @@ FboQuickWindow::FboQuickWindow( QOpenGLContext* context /*= 0*/ )
     connect( &m_renderControl, &QQuickRenderControl::sceneChanged,
              this, &FboQuickWindow::sceneChanged );
 
+    m_resizeTimer.setSingleShot( true );
+    m_resizeTimer.setInterval( 100 );
+    connect( &m_resizeTimer, &QTimer::timeout,
+             this, &FboQuickWindow::doScheduledResize );
 
     m_renderTimer.setSingleShot( true );
     m_renderTimer.setInterval( 5 );
@@ -138,6 +142,22 @@ void FboQuickWindow::resizeEvent( QResizeEvent* )
         createFbo();
         m_context->doneCurrent();
     }
+}
+
+void FboQuickWindow::doScheduledResize()
+{
+    resize( m_requestedSize );
+}
+
+void FboQuickWindow::scheduleResize( int w, int h )
+{
+    scheduleResize( QSize( w, h ) );
+}
+
+void FboQuickWindow::scheduleResize( const QSize& newSize )
+{
+    m_requestedSize = newSize;
+    m_resizeTimer.start();
 }
 
 void FboQuickWindow::resize( const QSize& newSize )
