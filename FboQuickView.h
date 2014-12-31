@@ -16,6 +16,7 @@ public:
 
 public Q_SLOTS:
     void setSource( const QUrl& );
+    void setQml( const QString& qml, const QUrl& qmlUrl );
 
 private Q_SLOTS:
     void componentStatusChanged( QQmlComponent::Status );

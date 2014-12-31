@@ -43,6 +43,34 @@ void FboQuickView::setSource( const QUrl& source )
     }
 }
 
+void FboQuickView::setQml( const QString& qml, const QUrl& qmlUrl )
+{
+    if( m_rootItem ) {
+        delete m_rootItem;
+        m_rootItem = 0;
+    }
+
+    if( m_qmlComponent ) {
+        delete m_qmlComponent;
+        m_qmlComponent = 0;
+    }
+
+    if( !qml.isEmpty() ) {
+        m_qmlComponent = new QQmlComponent( &m_qmlEngine, &m_qmlEngine );
+        m_qmlComponent->setData( qml.toUtf8(), qmlUrl );
+
+        if( m_qmlComponent->isLoading() ) {
+            connect( m_qmlComponent, &QQmlComponent::statusChanged,
+                     this, &FboQuickView::componentStatusChanged );
+        } else {
+            componentStatusChanged( m_qmlComponent->status() );
+        }
+
+        QResizeEvent event( size(), size() );
+        resizeEvent( &event );
+    }
+}
+
 void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
 {
     Q_ASSERT( !m_rootItem );
