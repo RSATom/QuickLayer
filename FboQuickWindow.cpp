@@ -143,7 +143,7 @@ void FboQuickWindow::resize( const QSize& newSize )
 {
     //have to emulate resize event since Qt don't generate some events on hidden window
     QResizeEvent event( size(), newSize );
-    QQuickWindow::resize( newSize );
+    setGeometry( 0, 0, newSize.width(), newSize.height() );
     resizeEvent( &event );
 }
 
