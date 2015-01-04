@@ -16,6 +16,12 @@ public:
 
     QList<QQmlError> errors() const;
 
+    typedef QQmlComponent::Status Status;
+    Status status() const;
+
+Q_SIGNALS:
+   void statusChanged( Status );
+
 public Q_SLOTS:
     void setSource( const QUrl& );
     void setQml( const QString& qml, const QUrl& qmlUrl );

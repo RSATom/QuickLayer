@@ -31,6 +31,8 @@ void FboQuickView::setSource( const QUrl& source )
 
     if( !source.isEmpty() ) {
         m_qmlComponent = new QQmlComponent( &m_qmlEngine, source, &m_qmlEngine );
+        connect( m_qmlComponent, SIGNAL( statusChanged( QQmlComponent::Status ) ),
+                 this, SIGNAL( statusChanged( QQmlComponent::Status ) ) );
         if( m_qmlComponent->isLoading() ) {
             connect( m_qmlComponent, &QQmlComponent::statusChanged,
                      this, &FboQuickView::componentStatusChanged );
@@ -99,4 +101,12 @@ QList<QQmlError> FboQuickView::errors() const
         return m_qmlComponent->errors();
 
     return QList<QQmlError>();
+}
+
+FboQuickView::Status FboQuickView::status() const
+{
+    if( !m_qmlComponent )
+        return QQmlComponent::Null;
+
+    return m_qmlComponent->status();
 }
