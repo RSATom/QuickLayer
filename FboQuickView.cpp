@@ -37,9 +37,6 @@ void FboQuickView::setSource( const QUrl& source )
         } else {
             componentStatusChanged( m_qmlComponent->status() );
         }
-
-        QResizeEvent event( size(), size() );
-        resizeEvent( &event );
     }
 }
 
