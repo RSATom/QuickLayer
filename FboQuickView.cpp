@@ -65,9 +65,6 @@ void FboQuickView::setQml( const QString& qml, const QUrl& qmlUrl )
         } else {
             componentStatusChanged( m_qmlComponent->status() );
         }
-
-        QResizeEvent event( size(), size() );
-        resizeEvent( &event );
     }
 }
 
@@ -86,6 +83,9 @@ void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
 
     rootObject.take()->setParent( contentItem() );
     m_rootItem->setParentItem( contentItem() );
+
+    QResizeEvent event( size(), size() );
+    resizeEvent( &event );
 }
 
 void FboQuickView::resizeEvent( QResizeEvent* event )
