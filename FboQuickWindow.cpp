@@ -8,8 +8,13 @@
 
 #include <QTimer>
 
+QQuickRenderControl* FboQuickWindow::createRenderControl()
+{
+    return ( m_renderControl = new QQuickRenderControl );
+}
+
 FboQuickWindow::FboQuickWindow( QOpenGLContext* context /*= 0*/ )
-    : QQuickWindow( &m_renderControl ),
+    : QQuickWindow( createRenderControl() ),
       m_context( 0 ), m_offscreenSurface( 0 ), m_fbo( 0 ),
       m_needPolishAndSync( true )
 {
@@ -18,9 +23,9 @@ FboQuickWindow::FboQuickWindow( QOpenGLContext* context /*= 0*/ )
     connect( this, &QQuickWindow::sceneGraphInvalidated,
              this, &FboQuickWindow::sceneGraphInitialized );
 
-    connect( &m_renderControl, &QQuickRenderControl::renderRequested,
+    connect( m_renderControl, &QQuickRenderControl::renderRequested,
              this, &FboQuickWindow::renderRequested );
-    connect( &m_renderControl, &QQuickRenderControl::sceneChanged,
+    connect( m_renderControl, &QQuickRenderControl::sceneChanged,
              this, &FboQuickWindow::sceneChanged );
 
     m_renderTimer.setSingleShot( true );
@@ -39,20 +44,21 @@ FboQuickWindow::~FboQuickWindow()
     disconnect( this, &QQuickWindow::sceneGraphInvalidated,
                 this, &FboQuickWindow::sceneGraphInitialized );
 
-    disconnect( &m_renderControl, &QQuickRenderControl::renderRequested,
+    disconnect( m_renderControl, &QQuickRenderControl::renderRequested,
                 this, &FboQuickWindow::renderRequested );
-    disconnect( &m_renderControl, &QQuickRenderControl::sceneChanged,
+    disconnect( m_renderControl, &QQuickRenderControl::sceneChanged,
                 this, &FboQuickWindow::sceneChanged );
 
     if( m_context && m_offscreenSurface &&
         m_context->makeCurrent( m_offscreenSurface ) )
     {
-        m_renderControl.invalidate();
+        m_renderControl->invalidate();
     }
 
     destroyFbo();
 
     delete m_offscreenSurface;
+    delete m_renderControl;
 }
 
 void FboQuickWindow::init( QOpenGLContext* extContext )
@@ -77,7 +83,7 @@ void FboQuickWindow::init( QOpenGLContext* extContext )
     m_offscreenSurface->create();
 
     m_context->makeCurrent( m_offscreenSurface );
-    m_renderControl.initialize( m_context );
+    m_renderControl->initialize( m_context );
     m_context->doneCurrent();
 }
 
@@ -129,10 +135,10 @@ void FboQuickWindow::render()
         if( m_needPolishAndSync ) {
             m_needPolishAndSync = false;
             //FIXME! better do it in separate thread
-            m_renderControl.polishItems();
-            m_renderControl.sync();
+            m_renderControl->polishItems();
+            m_renderControl->sync();
         }
-        m_renderControl.render();
+        m_renderControl->render();
 
         resetOpenGLState();
 

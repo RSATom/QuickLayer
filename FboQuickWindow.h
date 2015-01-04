@@ -6,13 +6,10 @@
 
 QT_FORWARD_DECLARE_CLASS( QOffscreenSurface )
 
-struct RenderControlHolder
+class FboQuickWindow : public QQuickWindow
 {
-    QQuickRenderControl m_renderControl;
-};
+    Q_OBJECT
 
-class FboQuickWindow : private RenderControlHolder, public QQuickWindow
-{
 public:
     //takes ownership over passed QOpenGLContext
     FboQuickWindow( QOpenGLContext* = 0 );
@@ -46,10 +43,14 @@ private Q_SLOTS:
     void render();
 
 private:
+    QQuickRenderControl* createRenderControl();
+
     void createFbo();
     void destroyFbo();
 
 private:
+    QQuickRenderControl* m_renderControl;
+
     QOpenGLContext* m_context;
     QOffscreenSurface* m_offscreenSurface;
     QOpenGLFramebufferObject* m_fbo;
