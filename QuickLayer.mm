@@ -149,11 +149,4 @@ GLuint _program;
     }
 }
 
-- (void)resizeWithOldSuperlayerSize: (CGSize) size
-{
-    _quickWindow->resize( size.width, size.height );
-
-    [super resizeWithOldSuperlayerSize: size];
-}
-
 @end
