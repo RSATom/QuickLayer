@@ -95,3 +95,11 @@ void FboQuickView::resizeEvent( QResizeEvent* event )
     if( m_rootItem )
         m_rootItem->setSize( QSizeF( width(), height() ) );
 }
+
+QList<QQmlError> FboQuickView::errors() const
+{
+    if( m_qmlComponent )
+        return m_qmlComponent->errors();
+
+    return QList<QQmlError>();
+}
