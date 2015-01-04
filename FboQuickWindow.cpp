@@ -145,6 +145,8 @@ void FboQuickWindow::render()
         m_context->functions()->glFlush();
 
         m_context->doneCurrent();
+
+        Q_EMIT sceneRendered();
     }
 }
 

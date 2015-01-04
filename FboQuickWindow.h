@@ -27,6 +27,9 @@ public:
     void resize( const QSize& newSize );
     void resize( int w, int h );
 
+Q_SIGNALS:
+    void sceneRendered();
+
 private:
     using QQuickWindow::resize; //it shouldn't be used directly
 
