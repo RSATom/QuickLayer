@@ -1,6 +1,7 @@
 #include "FboQuickWindow.h"
 
 #include <QOpenGLContext>
+#include <QOpenGLFunctions>
 #include <QOffscreenSurface>
 #include <QOpenGLFramebufferObject>
 #include <QQuickRenderControl>
@@ -59,8 +60,17 @@ void FboQuickWindow::init( QOpenGLContext* extContext )
     Q_ASSERT( extContext );
     Q_ASSERT( !m_context && !m_offscreenSurface && !m_fbo );
 
+    extContext->setParent( this );
     m_context = extContext;
-    m_context->setParent( this );
+
+    QSurfaceFormat format;
+    format.setDepthBufferSize( 16 );
+    format.setStencilBufferSize( 8 );
+
+    m_context = new QOpenGLContext( this );
+    m_context->setFormat( format );
+    m_context->setShareContext( extContext );
+    m_context->create();
 
     m_offscreenSurface = new QOffscreenSurface();
     m_offscreenSurface->setFormat( m_context->format() );
@@ -125,6 +135,8 @@ void FboQuickWindow::render()
         m_renderControl.render();
 
         resetOpenGLState();
+
+        m_context->functions()->glFlush();
 
         m_context->doneCurrent();
     }

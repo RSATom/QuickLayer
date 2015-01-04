@@ -46,7 +46,6 @@ GLuint _program;
 - (NSOpenGLPixelFormat*) openGLPixelFormatForDisplayMask: (uint32_t) __unused mask
 {
     NSOpenGLPixelFormatAttribute attrs[] = {
-        NSOpenGLPFANoRecovery,
         NSOpenGLPFAColorSize, 24,
         NSOpenGLPFAStencilSize, 8,
         NSOpenGLPFADepthSize, 16,
