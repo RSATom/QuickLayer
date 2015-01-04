@@ -125,7 +125,7 @@ void FboQuickWindow::sceneChanged()
 
 void FboQuickWindow::render()
 {
-    if( m_context->makeCurrent( m_offscreenSurface ) ) {
+    if( m_fbo && m_context->makeCurrent( m_offscreenSurface ) ) {
         if( m_needPolishAndSync ) {
             m_needPolishAndSync = false;
             //FIXME! better do it in separate thread
