@@ -30,15 +30,10 @@ void FboQuickView::setSource( const QUrl& source )
     }
 
     if( !source.isEmpty() ) {
-        m_qmlComponent = new QQmlComponent( &m_qmlEngine, source, &m_qmlEngine );
-        connect( m_qmlComponent, SIGNAL( statusChanged( QQmlComponent::Status ) ),
-                 this, SIGNAL( statusChanged( QQmlComponent::Status ) ) );
-        if( m_qmlComponent->isLoading() ) {
-            connect( m_qmlComponent, &QQmlComponent::statusChanged,
-                     this, &FboQuickView::componentStatusChanged );
-        } else {
-            componentStatusChanged( m_qmlComponent->status() );
-        }
+        m_qmlComponent = new QQmlComponent( &m_qmlEngine, &m_qmlEngine );
+        connect( m_qmlComponent, &QQmlComponent::statusChanged,
+                 this, &FboQuickView::componentStatusChanged );
+        m_qmlComponent->loadUrl( source );
     }
 }
 
@@ -56,20 +51,17 @@ void FboQuickView::setQml( const QString& qml, const QUrl& qmlUrl )
 
     if( !qml.isEmpty() ) {
         m_qmlComponent = new QQmlComponent( &m_qmlEngine, &m_qmlEngine );
+        connect( m_qmlComponent, &QQmlComponent::statusChanged,
+                 this, &FboQuickView::componentStatusChanged );
         m_qmlComponent->setData( qml.toUtf8(), qmlUrl );
-
-        if( m_qmlComponent->isLoading() ) {
-            connect( m_qmlComponent, &QQmlComponent::statusChanged,
-                     this, &FboQuickView::componentStatusChanged );
-        } else {
-            componentStatusChanged( m_qmlComponent->status() );
-        }
     }
 }
 
 void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
 {
     Q_ASSERT( !m_rootItem );
+
+    Q_EMIT statusChanged( status );
 
     if( QQmlComponent::Ready != status )
         return;

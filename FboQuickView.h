@@ -7,6 +7,8 @@
 
 class FboQuickView : public FboQuickWindow
 {
+    Q_OBJECT
+
 public:
     //takes ownership over passed QOpenGLContext
     FboQuickView( QOpenGLContext* = 0 );
