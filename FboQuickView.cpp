@@ -72,6 +72,7 @@ void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
     if( !m_rootItem )
         return;
 
+    contentItem()->setFocus( true );
     rootObject.take()->setParent( contentItem() );
     m_rootItem->setParentItem( contentItem() );
 
