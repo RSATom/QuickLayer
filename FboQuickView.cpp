@@ -61,16 +61,18 @@ void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
 {
     Q_ASSERT( !m_rootItem );
 
-    Q_EMIT statusChanged( status );
-
-    if( QQmlComponent::Ready != status )
+    if( QQmlComponent::Ready != status ) {
+        Q_EMIT statusChanged( status );
         return;
+    }
 
     QScopedPointer<QObject> rootObject( m_qmlComponent->create() );
     m_rootItem = qobject_cast<QQuickItem*>( rootObject.data() );
 
-    if( !m_rootItem )
+    if( !m_rootItem ) {
+        Q_EMIT statusChanged( QQmlComponent::Error );
         return;
+    }
 
     contentItem()->setFocus( true );
     rootObject.take()->setParent( contentItem() );
@@ -78,6 +80,8 @@ void FboQuickView::componentStatusChanged( QQmlComponent::Status status )
 
     QResizeEvent event( size(), size() );
     resizeEvent( &event );
+
+    Q_EMIT statusChanged( QQmlComponent::Ready );
 }
 
 void FboQuickView::resizeEvent( QResizeEvent* event )
