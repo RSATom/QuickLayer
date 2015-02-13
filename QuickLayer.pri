@@ -1,3 +1,5 @@
+CONFIG += c++11
+
 QT += quick
 
 HEADERS += \
