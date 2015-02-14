@@ -3,17 +3,28 @@ CONFIG += c++11
 QT += quick
 
 HEADERS += \
-    $$PWD/QuickLayer.h \
     $$PWD/FboQuickWindow.h \
-    $$PWD/FboQuickView.h
+    $$PWD/FboQuickView.h \
+    $$PWD/FboQuickWrapperWindow.h
 
 SOURCES += \
     $$PWD/FboQuickWindow.cpp \
-    $$PWD/FboQuickView.cpp
+    $$PWD/FboQuickView.cpp \
+    $$PWD/FboQuickWrapperWindow.cpp
 
-OBJECTIVE_HEADERS += $$PWD/QuickLayer.h
-OBJECTIVE_SOURCES += $$PWD/QuickLayer.mm
+macx {
+    HEADERS += \
+        $$PWD/QuickLayer.h \
 
-INCLUDEPATH += $(QTDIR)/include
+    OBJECTIVE_HEADERS += \
+        $$PWD/QuickLayer.h
 
-LIBS += -framework Cocoa -framework QuartzCore
+    OBJECTIVE_SOURCES += \
+        $$PWD/QuickLayer.mm
+
+    LIBS += -framework Cocoa -framework QuartzCore
+
+    INCLUDEPATH += $(QTDIR)/include
+}
+
+INCLUDEPATH += $$PWD

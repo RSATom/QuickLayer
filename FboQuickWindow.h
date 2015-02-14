@@ -21,6 +21,9 @@ public:
     //takes ownership over passed QOpenGLContext
     void init( QOpenGLContext* );
 
+    QOpenGLContext* glContext()
+        { return m_context; }
+
     void scheduleResize( const QSize& newSize );
     void scheduleResize( int w, int h );
 
