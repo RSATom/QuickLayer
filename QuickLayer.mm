@@ -56,12 +56,8 @@ GLuint _program;
     return [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 }
 
-- (NSOpenGLContext*) openGLContextForPixelFormat: (NSOpenGLPixelFormat*) pixelFormat
+- (void)internalInit: (NSOpenGLContext*) context
 {
-    NSOpenGLContext* context = [super openGLContextForPixelFormat: pixelFormat];
-
-    [context makeCurrentContext];
-
     GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
     const GLchar* vertexShaderSource =
         "attribute vec4 a_vertex;"
@@ -102,15 +98,16 @@ GLuint _program;
 
     _quickWindow->resize( self.frame.size.width, self.frame.size.height );
     _quickWindow->init( layerContext );
-
-    return context;
 }
 
-- (void)drawInOpenGLContext: (NSOpenGLContext*) __unused context
+- (void)drawInOpenGLContext: (NSOpenGLContext*) context
                 pixelFormat: (NSOpenGLPixelFormat*) __unused pixelFormat
                forLayerTime: (CFTimeInterval) __unused timeInterval
                 displayTime: (const CVTimeStamp*) __unused timeStamp
 {
+    if( !_program )
+        [self internalInit: context];
+
     if( QOpenGLFramebufferObject* fbo = _quickWindow->fbo() ) {
         glBindTexture( GL_TEXTURE_2D, fbo->texture() );
 
